@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd"
+                  Version="3.3" Folio="FOL123456" Fecha="2017-05-04T09:36:11"
+                  FormaPago="01"
+                  Sello=""
+                  NoCertificado=""
+                  Certificado=""
+                  CondicionesDePago="CondicionesDePago" SubTotal="1000.00" Descuento="100.00" Moneda="MXN"
+                  TipoCambio="1" Total="900.00" TipoDeComprobante="I" MetodoPago="PUE" LugarExpedicion="72000"
+                  xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+    <cfdi:Emisor Rfc="TEST010204002" Nombre="ETHAN HUNT" RegimenFiscal="601"/>
+    <cfdi:Receptor Rfc="TEST010203001" Nombre="JAMES BOND 007" UsoCFDI="G02"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto ClaveUnidad="C81" ClaveProdServ="84111506" NoIdentificacion="1234567890" Cantidad="1"
+                       Unidad="ACT" Descripcion="Pago" ValorUnitario="1000" Importe="1000.00" Descuento="100.00">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="1000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="160.00"/>
+                </cfdi:Traslados>
+                <cfdi:Retenciones>
+                    <cfdi:Retencion Base="1000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000"
+                                    Importe="160.00"/>
+                </cfdi:Retenciones>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    <cfdi:Impuestos TotalImpuestosRetenidos="160.00" TotalImpuestosTrasladados="160.00">
+        <cfdi:Retenciones>
+            <cfdi:Retencion Impuesto="002" Importe="160.00"/>
+        </cfdi:Retenciones>
+        <cfdi:Traslados>
+            <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="160.00"/>
+        </cfdi:Traslados>
+    </cfdi:Impuestos>
+</cfdi:Comprobante>
