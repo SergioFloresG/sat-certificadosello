@@ -1,0 +1,40 @@
+{
+  "name": "mrgenis/sat-certificadosello",
+  "description": "Grupo de clases para administrar los archivos CER y KEY emitidos por el SAT y generar el SELLO y CERTIFICADO el CFDI",
+  "keywords": [
+    "xml",
+    "SAT",
+    "3.3",
+    "SAT 3.3",
+    "cadena",
+    "original",
+    "sello",
+    "CER",
+    "KEY",
+    "certificado",
+    "CFDI"
+  ],
+  "authors": [
+    {
+      "name": "Sergio Flores Genis",
+      "email": "sf.genis@outlook.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.0",
+    "mrgenis/sat-cadenaoriginal": "1.0",
+    "ext-xmlwriter": "*",
+    "ext-xmlreader": "*",
+    "ext-dom": "*",
+    "lib-libxml": ">=2.6.20"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "MrGenis\\Sat\\": "src"
+    }
+  }
+}
