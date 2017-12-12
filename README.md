@@ -48,6 +48,5 @@ $cerSello = new CertificadoSello33($storage);
 $xml = $cerSello->injectInformation($xml);
 ```
 
-
 # Licencia
 MIT License (MIT). Ver [archivo de licencia](https://github.com/SergioFloresG/sat-certificadosello/blob/HEAD/LICENSE) para mas información.
