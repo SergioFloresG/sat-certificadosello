@@ -2,7 +2,7 @@
 
 
 [![Latest Version](https://img.shields.io/github/release/SergioFloresG/sat-certificadosello.svg?style=flat)](https://github.com/SergioFloresG/sat-certificadosello/releases)
-[![Build Status](https://travis-ci.org/SergioFloresG/sat-certificadosello.svg?branch=master&style=for-the-badge)](https://travis-ci.org/SergioFloresG/sat-certificadosello)
+[![Build Status](https://travis-ci.org/SergioFloresG/sat-certificadosello.svg?branch=dev&style=for-the-badge)](https://travis-ci.org/SergioFloresG/sat-certificadosello)
 
 Clases para manejar los archivos CER y KEY del SAT para generar el sello de un CFDI
 
