@@ -11,27 +11,47 @@ namespace MrGenis\Sat;
 class CerKeyTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function test01StorageString()
+    /** @var StorageCerKey */
+    private $storage;
+
+    protected function setUp()
     {
         $cer = $this->path('testing_pm.cer');
         $key = $this->path('testing_pm.key');
         $pas = '12345678a';
 
-        $storage = StorageCerKey::create($cer, $key, $pas);
-        $this->assertFileExists($storage->getCerPemFile(), "PEM del archivo CER no existe");
-        $this->assertFileExists($storage->getKeyPemFile(), "PEM del archivo KEY no existe");
-        $this->assertFileExists($storage->getPfkFile(), "Archivo PFK no existe");
+        $this->storage = StorageCerKey::create($cer, $key, $pas);
     }
 
-    public function test02SelloCertificado(){
+
+    public function test_00_march_cer_key()
+    {
+        $this->assertTrue($this->storage->matchCerKey(), 'Cer y Key no son compatibles');
+        unlink($this->storage->getCerPemFile());
+    }
+
+    public function test_01_make_cerpem()
+    {
+        $this->assertTrue($this->storage->make_cerpem(), 'No se logro crear el archivo PEM del certificado');
+    }
+
+    public function test_02_make_keypem() {
+        $this->assertTrue($this->storage->make_keypem(), 'No se logro crear el archivo PEM de la llave');
+    }
+
+    public function test01StorageString()
+    {
+
+        $this->assertFileExists($this->storage->getCerPemFile(), "PEM del archivo CER no existe");
+        $this->assertFileExists($this->storage->getKeyPemFile(), "PEM del archivo KEY no existe");
+        $this->assertFileExists($this->storage->getPfkFile(), "Archivo PFK no existe");
+    }
+
+    public function test02SelloCertificado()
+    {
         $xml = $this->path('testing_pm.xml');
-        $cer = $this->path('testing_pm.cer');
-        $key = $this->path('testing_pm.key');
-        $pas = '12345678a';
 
-        $storage = StorageCerKey::create($cer, $key, $pas);
-
-        $cerSello = new CertificadoSello33($storage);
+        $cerSello = new CertificadoSello33($this->storage);
         $xml = $cerSello->injectInformation($xml);
 
         $this->assertNotEmpty($xml, "No se genero el XML sellado");

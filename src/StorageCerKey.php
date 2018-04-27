@@ -29,7 +29,7 @@ class StorageCerKey
      *
      * @param string $cer_file direccion al archivo CER
      * @param string $key_file direccion al archivo KEY
-     * @param string $pass     clave para archivo KEY
+     * @param string $pass clave para archivo KEY
      *
      * @throws \RuntimeException
      */
@@ -46,14 +46,14 @@ class StorageCerKey
         $this->key_password = $pass;
 
 
-        $this->__cerpem_exist();
-        $this->__keypem_exist();
-        $this->__pfk_exist();
+        //$this->__cerpem_exist();
+        //$this->__keypem_exist();
+        //$this->__pfk_exist();
     }
 
     /**
-     * @param string $cer  archivo CER
-     * @param string $key  archivo KEY
+     * @param string $cer archivo CER
+     * @param string $key archivo KEY
      * @param string $pass clave para archivo KEY
      *
      * @return static
@@ -93,7 +93,7 @@ class StorageCerKey
         if (strpos($outcer[0], 'serial=') !== false) {
             $outcer = str_replace('serial=', '', $outcer[0]);
             for ($i = 0; $i < strlen($outcer); $i++) if ($i % 2 != 0) {
-                $serial .= $outcer[ $i ];
+                $serial .= $outcer[$i];
             }
         }
         unset($outcer, $intrcer);
@@ -140,7 +140,8 @@ class StorageCerKey
     /**
      * @return string
      */
-    public function getPfkFile(): string{
+    public function getPfkFile(): string
+    {
         return $this->pfk_file;
     }
 
@@ -160,9 +161,7 @@ class StorageCerKey
         static $command = "openssl pkcs8 -inform DER -in %s -out %s -passin pass:%s 2>&1";
         $key = $this->getKeyFile();
         $pem = $this->getKeyPemFile();
-
-        if (!$this->key_password) return false;
-
+        if (!$this->key_password || !file_exists($key)) return false;
         try {
 
 
@@ -174,7 +173,8 @@ class StorageCerKey
 
 
             return ($intr === 0);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // Nada
         }
         return false;
@@ -187,21 +187,26 @@ class StorageCerKey
      */
     protected function makeCER2PEM()
     {
-        static $command = "openssl x509 -inform DER -outform PEM -in %s -pubkey -out %s 2>&1";
+//        static $command = "openssl x509 -inform DER -outform PEM -in %s -pubkey -out %s 2>&1";
         $cer = $this->getCerFile();
         $pem = $this->getCerPemFile();
         if (!file_exists($cer)) return false;
         try {
 
+            $chunk = chunk_split(base64_encode(file_get_contents($cer)), 64, PHP_EOL);
+            $pem_content = '-----BEGIN CERTIFICATE-----' . PHP_EOL .
+                $chunk . '-----END CERTIFICATE-----' . PHP_EOL;
 
-            exec(sprintf($command,
-                escapeshellarg($cer),
-                escapeshellarg($pem)),
-                $output, $intr);
+            file_put_contents($pem, $pem_content);
+            return true;
 
-
-            return ($intr === 0);
-        } catch (\Exception $e) {
+//            exec(sprintf($command,
+//                escapeshellarg($cer),
+//                escapeshellarg($pem)),
+//                $output, $intr);
+//            return ($intr === 0);
+        }
+        catch (\Exception $e) {
             // Nada
         }
         return false;
@@ -229,32 +234,51 @@ class StorageCerKey
 
 
             return ($intr === 0);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // Nada
         }
         return false;
 
     }
 
-    private function __cerpem_exist()
+    /**
+     * Genera el archivo PEM del certificado
+     * @return bool
+     */
+    public function make_cerpem()
     {
-        if (!file_exists($this->getCerPemFile()) && !$this->makeCER2PEM()) {
-            throw new \RuntimeException("No se logro generar el archivo PEM del certificado");
-        }
+        return (file_exists($this->getCerPemFile())) || (file_exists($this->getCerFile()) && $this->makeCER2PEM());
+//        if (!file_exists($this->getCerPemFile()) && !$this->makeCER2PEM()) {
+//            throw new \RuntimeException("No se logro generar el archivo PEM del certificado");
+//        }
     }
 
-    private function __keypem_exist()
+    /**
+     * Genera el archivo PEM de la llave
+     * @return bool
+     */
+    public function make_keypem()
     {
-        if (!file_exists($this->getKeyPemFile()) && !$this->makeKEY2PEM()) {
-            throw new \RuntimeException("No se logo generar el archivo PEM de la llave");
-        }
+        /// el archivo PEM : TRUE, o
+        /// el archivo KEY existe y se genera el PEM : TRUE.
+        /// el archivo PEM no existe o no existe KEY: FALSE.
+        return (file_exists($this->getKeyPemFile())) || (file_exists($this->getKeyFile()) && $this->makeKEY2PEM());
+//        if (!file_exists($this->getKeyPemFile()) && !$this->makeKEY2PEM()) {
+//           throw new \RuntimeException("No se logo generar el archivo PEM de la llave");
+//        }
     }
 
-    private function __pfk_exist()
+    /**
+     * General el archivo PFX
+     * @return bool
+     */
+    public function make_pfk()
     {
-        if (!file_exists($this->getPfkFile()) && !$this->makePFX()) {
-            throw new \RuntimeException('No se logro generar el archivo PFX');
-        }
+        return (file_exists($this->getPfkFile()) && $this->makePFX());
+//        if (!file_exists($this->getPfkFile()) && !$this->makePFX()) {
+//            throw new \RuntimeException('No se logro generar el archivo PFX');
+//        }
     }
 
     /// format:on
